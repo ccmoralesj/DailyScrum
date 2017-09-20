@@ -1,0 +1,4 @@
+test
+--recursive
+-u bdd
+-R spec
