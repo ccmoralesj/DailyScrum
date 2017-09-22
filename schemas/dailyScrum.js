@@ -7,6 +7,18 @@ const dailyScrumSchema = new Schema({
   yesterday: String,
   today: String,
   problems: String,
+  _team: {
+    type: Schema.Types.ObjectId,
+    ref: 'Team',
+    required: true,
+    index: true,
+  },
+  _teamMember: {
+    type: Schema.Types.ObjectId,
+    ref: 'TeamMember',
+    required: true,
+    index: true,
+  },
   },
   {
     timestamps: true,

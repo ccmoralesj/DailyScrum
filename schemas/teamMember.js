@@ -9,6 +9,18 @@ const teamMemberSchema = new Schema({
     type: String,
     enum: roles,
   },
+  _member: {
+    type: Schema.Types.ObjectId,
+    ref: 'Member',
+    required: true,
+    index: true,
+  },
+  _team: {
+    type: Schema.Types.ObjectId,
+    ref: 'Team',
+    required: true,
+    index: true,
+  },
   },
   {
     timestamps: true,

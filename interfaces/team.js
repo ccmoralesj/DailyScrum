@@ -20,19 +20,18 @@ const read = async (query = {}) => {
   return teamsFound;
 };
 
-const create = async ({ name, birthDate }) => {
-  logger.info(`Attempting to create a Team with name: ${name} and birthDate: ${birthDate}`);
+const create = async ({ name }) => {
+  logger.info(`Attempting to create a Team with name: ${name}`);
   if (!name) throw new Error(errors.NAME_REQUIRED);
-  const teamCreated = await TeamModel.create({ name, birthDate });
+  const teamCreated = await TeamModel.create({ name });
   logger.info('Team created successfully');
   return teamCreated.toObject();
 };
 
-const update = async ({ id, name, birthDate } = {}) => {
+const update = async ({ id, name } = {}) => {
   logger.info(`Looking up to update team with id: ${id}`);
   const attrToUpdate = {};
   if (name) attrToUpdate.name = name;
-  if (birthDate) attrToUpdate.birthDate = birthDate;
   const updated = await TeamModel.update({ _id: id }, attrToUpdate, { runValidators: true, overwrite: false });
   logger.verbose(`Updated: ${updated}`);
   return updated;
