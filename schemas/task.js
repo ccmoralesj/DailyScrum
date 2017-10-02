@@ -3,10 +3,20 @@ const mongooseLeanId = require('mongoose-lean-id');
 const connection = require('../mongooseConnection');
 const Schema = mongoose.Schema;
 
-const dailyScrumSchema = new Schema({
-  yesterday: String,
-  today: String,
-  problems: String,
+const taskSchema = new Schema({
+  description: {
+    type: String,
+    required: true,
+  },
+  finishDate: {
+    type: Date,
+    index: true,
+  },
+  notes: [String],
+  archive: {
+    type: Boolean,
+    default: false,
+  },
   _team: {
     type: Schema.Types.ObjectId,
     ref: 'Team',
@@ -27,8 +37,8 @@ const dailyScrumSchema = new Schema({
     },
   });
 
-dailyScrumSchema.plugin(mongooseLeanId);
+taskSchema.plugin(mongooseLeanId);
 
-const DailyScrum = connection.model('DailyScrum', dailyScrumSchema);
+const Task = connection.model('Task', taskSchema);
 
-module.exports = DailyScrum;
+module.exports = Task;
