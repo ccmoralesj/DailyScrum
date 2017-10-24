@@ -1,7 +1,7 @@
 {
-  "name": "scrum_daily",
+  "name": "scrumly",
   "version": "0.0.1",
-  "description": "Node module to generate data base interaction for scrum_daily",
+  "description": "Node module to generate data base interaction for Daily Scrum",
   "main": "index.js",
   "directories": {
     "test": "test"
