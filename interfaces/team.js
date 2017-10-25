@@ -20,18 +20,19 @@ const read = async (query = {}) => {
   return teamsFound;
 };
 
-const create = async ({ name }) => {
-  logger.info(`Attempting to create a Team with name: ${name}`);
+const create = async ({ name, color = 'none' }) => {
+  logger.info(`Attempting to create a Team with name: ${name} and color: ${color}`);
   if (!name) throw new Error(errors.NAME_REQUIRED);
-  const teamCreated = await TeamModel.create({ name });
+  const teamCreated = await TeamModel.create({ name, color });
   logger.info('Team created successfully');
   return teamCreated.toObject();
 };
 
-const update = async ({ id, name } = {}) => {
+const update = async ({ id, name, color } = {}) => {
   logger.info(`Looking up to update team with id: ${id}`);
   const attrToUpdate = {};
   if (name) attrToUpdate.name = name;
+  if (color) attrToUpdate.color = color;
   const updated = await TeamModel.update({ _id: id }, attrToUpdate, { runValidators: true, overwrite: false });
   logger.verbose(`Updated: ${updated}`);
   return updated;
@@ -44,4 +45,35 @@ const remove = async (id) => {
   return teamDeleted;
 };
 
-module.exports = { readById, read, create, update, remove };
+const addToDo = async ({ teamId, toDos }) => {
+  logger.info(`Will add some toDos to team with id ${teamId}`);
+  logger.info(`ToDo\'s: ${toDos}`);
+  const teamToUpdate = await TeamModel.findById(teamId);
+  if (!teamToUpdate) throw new Error(errors.TEAM_NOT_FOUND);
+  logger.info('The team to update was found!');
+  for (let toDo of toDos) {
+    teamToUpdate.toDo.push(toDo);
+  }
+  const teamSaved = await teamToUpdate.save();
+  logger.info('The toDos were added and team was saved!');
+  return teamSaved;
+};
+
+const removeToDo = async ({ teamId, toDos }) => {
+  logger.info(`Will remove some toDos to team with id ${teamId}`);
+  logger.info(`teams: ${toDos}`);
+  const teamToUpdate = await TeamModel.findById(teamId);
+  if (!teamToUpdate) throw new Error(errors.TEAM_NOT_FOUND);
+  logger.info('The team to update was found!');
+  for (let toDo of toDos) {
+    const index = teamToUpdate.toDo.indexOf(toDo);
+    if (index !== -1) {
+      teamToUpdate.toDo.splice(index,1);
+    }
+  }
+  const teamSaved = await teamToUpdate.save();
+  logger.info('The toDos were removed and team was saved!');
+  return teamSaved;
+};
+
+module.exports = { readById, read, create, update, addToDo, removeToDo, remove };

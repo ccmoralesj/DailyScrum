@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 
 const teamSchema = new Schema({
   name: String,
+  color: String,
+  toDo: [String],
   },
   {
     timestamps: true,

@@ -73,6 +73,21 @@ describe('Team Interface', () => {
       expect(updated).to.has.property('nModified').eql(0);
       expect(updated).to.has.property('n').eql(0);
     });
+    it('should add two toDo\'s to a team', async () => {
+      const testToDos = ['some test ToDo', 'some ToDo test'];
+      const teamWithToDoAdded = await DailyScrum.Interfaces.Team.addToDo({ teamId: firstTeamId, toDos: testToDos });
+      expect(teamWithToDoAdded).to.has.property('id').eql(firstTeamId);
+      expect(teamWithToDoAdded).to.has.property('name').eql(firstTeam.name);
+      expect(teamWithToDoAdded).to.has.property('toDo').eql(testToDos);
+    });
+    it('should remove a ToDo to a team', async () => {
+      const testToDoToRemove = ['some test ToDo'];
+      const testToDo = ['some ToDo test'];
+      const teamWithToDoAdded = await DailyScrum.Interfaces.Team.removeToDo({ teamId: firstTeamId, toDos: testToDoToRemove });
+      expect(teamWithToDoAdded).to.has.property('id').eql(firstTeamId);
+      expect(teamWithToDoAdded).to.has.property('toDo').eql(testToDo);
+      expect(teamWithToDoAdded).to.has.property('name').eql(firstTeam.name);
+    });
   });
   describe('Team Delete', () => {
     it('Should delete a Team', async () => {
