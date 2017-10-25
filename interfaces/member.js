@@ -26,10 +26,11 @@ const read = async (query = {}) => {
   return membersFound;
 };
 
-const create = async ({ name, birthDate }) => {
+const create = async ({ name, birthDate, username }) => {
   logger.info(`Attempting to create a Member with name: ${name} and birthDate: ${birthDate}`);
   if (!name) throw new Error(errors.NAME_REQUIRED);
-  const memberCreated = await MemberModel.create({ name, birthDate });
+  if (!username) throw new Error(errors.USERNAME_REQUIRED);
+  const memberCreated = await MemberModel.create({ name, birthDate, username });
   logger.info('Member created successfully');
   return memberCreated.toObject();
 };

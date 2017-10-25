@@ -10,6 +10,11 @@ const memberSchema = new Schema({
     index: true,
   },
   birthDate: Date,
+  username: {
+    type: String,
+    required: true,
+    index: true,
+  },
   },
   {
     timestamps: true,

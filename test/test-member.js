@@ -10,9 +10,11 @@ describe('Member Interface', () => {
   let secondMemberId;
   const firstMember = {
     name: 'Member Test',
+    username: 'testName',
   };
   const secondMember = {
     name: 'Test Smith',
+    username: 'userTest',
     birthDate: new Date(94, 1, 20, 7, 30),
   };
   describe('Member Creation', () => {
@@ -27,11 +29,19 @@ describe('Member Interface', () => {
         expect(e.message).to.be.eql(errors.NAME_REQUIRED);
       }
     });
+    it('Should return a validation error USERNAME_REQUIRED', async () =>{
+      try {
+        await DailyScrum.Interfaces.Member.create({ name: 'Test Name' });
+      } catch (e) {
+        expect(e.message).to.be.eql(errors.USERNAME_REQUIRED);
+      }
+    });
     it('Should create a Member', async () => {
       const newMember = await DailyScrum.Interfaces.Member.create(firstMember);
       expect(newMember).to.has.property('id');
       firstMemberId = newMember.id;
       expect(newMember).to.has.property('name').eql(firstMember.name);
+      expect(newMember).to.has.property('username').eql(firstMember.username);
       expect(newMember).to.not.has.property('birthDate');
     });
     it('Should create another Member', async() => {
@@ -39,6 +49,7 @@ describe('Member Interface', () => {
       expect(newMember).to.has.property('id');
       secondMemberId = newMember.id;
       expect(newMember).to.has.property('name').eql(secondMember.name);
+      expect(newMember).to.has.property('username').eql(secondMember.username);
       expect(newMember).to.has.property('birthDate').eql(secondMember.birthDate);
     });
   });
