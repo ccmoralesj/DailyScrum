@@ -2,6 +2,7 @@ const logger = require('winston');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 
+mongoose.plugin(schema => { schema.options.usePushEach = true });
 mongoose.Promise = Promise;
 
 const db = mongoose.connection;
