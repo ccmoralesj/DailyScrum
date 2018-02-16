@@ -139,22 +139,19 @@ describe('TeamMember Interface', () => {
   describe('TeamMember Delete', () => {
     it('Should delete a TeamMember', async () => {
       const teamMemberDeleted = await DailyScrum.Interfaces.TeamMember.remove(firstTeamMemberId);
-      expect(teamMemberDeleted).to.has.property('result');
-      expect(teamMemberDeleted.result).to.has.property('ok').eql(1);
-      expect(teamMemberDeleted.result).to.has.property('n').eql(1);
+      expect(teamMemberDeleted).to.has.property('ok').eql(1);
+      expect(teamMemberDeleted).to.has.property('n').eql(1);
     });
     it('Should delete a TeamMember', async () => {
       const teamMemberDeleted = await DailyScrum.Interfaces.TeamMember.remove(secondTeamMemberId);
-      expect(teamMemberDeleted).to.has.property('result');
-      expect(teamMemberDeleted.result).to.has.property('ok').eql(1);
-      expect(teamMemberDeleted.result).to.has.property('n').eql(1);
+      expect(teamMemberDeleted).to.has.property('ok').eql(1);
+      expect(teamMemberDeleted).to.has.property('n').eql(1);
     });
     it('Shouldn\'t delete a TeamMember', async () => {
       const fakeId = 'testIdToFail';
       const teamMemberDeleted = await DailyScrum.Interfaces.TeamMember.remove(fakeId);
-      expect(teamMemberDeleted).to.has.property('result');
-      expect(teamMemberDeleted.result).to.has.property('ok').eql(1);
-      expect(teamMemberDeleted.result).to.has.property('n').eql(0);
+      expect(teamMemberDeleted).to.has.property('ok').eql(1);
+      expect(teamMemberDeleted).to.has.property('n').eql(0);
     });
   });
 });

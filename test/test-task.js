@@ -135,22 +135,19 @@ describe('Task Interface', () => {
   describe('Task Delete', () => {
     it('Should delete a Task', async () => {
       const taskDeleted = await DailyScrum.Interfaces.Task.remove(firstTaskId);
-      expect(taskDeleted).to.has.property('result');
-      expect(taskDeleted.result).to.has.property('ok').eql(1);
-      expect(taskDeleted.result).to.has.property('n').eql(1);
+      expect(taskDeleted).to.has.property('ok').eql(1);
+      expect(taskDeleted).to.has.property('n').eql(1);
     });
     it('Should delete a Task', async () => {
       const taskDeleted = await DailyScrum.Interfaces.Task.remove(secondTaskId);
-      expect(taskDeleted).to.has.property('result');
-      expect(taskDeleted.result).to.has.property('ok').eql(1);
-      expect(taskDeleted.result).to.has.property('n').eql(1);
+      expect(taskDeleted).to.has.property('ok').eql(1);
+      expect(taskDeleted).to.has.property('n').eql(1);
     });
     it('Shouldn\'t delete a Task', async () => {
       const fakeId = 'testIdToFail';
       const taskDeleted = await DailyScrum.Interfaces.Task.remove(fakeId);
-      expect(taskDeleted).to.has.property('result');
-      expect(taskDeleted.result).to.has.property('ok').eql(1);
-      expect(taskDeleted.result).to.has.property('n').eql(0);
+      expect(taskDeleted).to.has.property('ok').eql(1);
+      expect(taskDeleted).to.has.property('n').eql(0);
     });
   });
 });

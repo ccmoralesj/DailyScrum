@@ -99,22 +99,19 @@ describe('Member Interface', () => {
   describe('Member Delete', () => {
     it('Should delete a Member', async () => {
       const memberDeleted = await DailyScrum.Interfaces.Member.remove(firstMemberId);
-      expect(memberDeleted).to.has.property('result');
-      expect(memberDeleted.result).to.has.property('ok').eql(1);
-      expect(memberDeleted.result).to.has.property('n').eql(1);
+      expect(memberDeleted).to.has.property('ok').eql(1);
+      expect(memberDeleted).to.has.property('n').eql(1);
     });
     it('Should delete a Member', async () => {
       const memberDeleted = await DailyScrum.Interfaces.Member.remove(secondMemberId);
-      expect(memberDeleted).to.has.property('result');
-      expect(memberDeleted.result).to.has.property('ok').eql(1);
-      expect(memberDeleted.result).to.has.property('n').eql(1);
+      expect(memberDeleted).to.has.property('ok').eql(1);
+      expect(memberDeleted).to.has.property('n').eql(1);
     });
     it('Shouldn\'t delete a Member', async () => {
       const fakeId = 'testIdToFail';
       const memberDeleted = await DailyScrum.Interfaces.Member.remove(fakeId);
-      expect(memberDeleted).to.has.property('result');
-      expect(memberDeleted.result).to.has.property('ok').eql(1);
-      expect(memberDeleted.result).to.has.property('n').eql(0);
+      expect(memberDeleted).to.has.property('ok').eql(1);
+      expect(memberDeleted).to.has.property('n').eql(0);
     });
   });
 });
