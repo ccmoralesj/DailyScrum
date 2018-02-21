@@ -4,18 +4,20 @@ const connection = require('../mongooseConnection');
 
 const { Schema } = mongoose;
 
-const memberSchema = new Schema({
+const projectSchema = new Schema({
   name: {
     type: String,
     required: true,
     index: true,
   },
-  birthDate: Date,
-  username: {
+  description: {
     type: String,
-    required: true,
-    index: true,
   },
+  finished: {
+    type: Boolean,
+    default: false,
+  },
+  toDo: [String],
 },
 {
   timestamps: true,
@@ -24,12 +26,12 @@ const memberSchema = new Schema({
   },
 });
 
-memberSchema.virtual('id').get(function get() {
+projectSchema.virtual('id').get(function get() {
   return this._id.toString();
 });
 
-memberSchema.plugin(mongooseLeanVirtuals);
+projectSchema.plugin(mongooseLeanVirtuals);
 
-const Member = connection.model('Member', memberSchema);
+const Project = connection.model('Project', projectSchema);
 
-module.exports = Member;
+module.exports = Project;

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const mongooseLeanId = require('mongoose-lean-id');
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 const connection = require('../mongooseConnection');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const taskSchema = new Schema({
   description: {
@@ -29,15 +30,19 @@ const taskSchema = new Schema({
     required: true,
     index: true,
   },
+},
+{
+  timestamps: true,
+  toObject: {
+    virtuals: true,
   },
-  {
-    timestamps: true,
-    toObject: {
-      virtuals: true,
-    },
-  });
+});
 
-taskSchema.plugin(mongooseLeanId);
+taskSchema.virtual('id').get(function get() {
+  return this._id.toString();
+});
+
+taskSchema.plugin(mongooseLeanVirtuals);
 
 const Task = connection.model('Task', taskSchema);
 

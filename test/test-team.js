@@ -1,5 +1,6 @@
 const chai = require('chai');
 require('chai-as-promised');
+const mongoose = require('mongoose');
 const roles = require('../utils/roles');
 const errors = require('../utils/errors');
 const DailyScrum = require('../index');
@@ -10,29 +11,40 @@ describe('Team Interface', () => {
   let secondTeamId;
   const firstTeam = {
     name: 'Team Test',
+    _project: new mongoose.Types.ObjectId(),
   };
   const secondTeam = {
     name: 'Test Team',
+    _project: new mongoose.Types.ObjectId(),
   };
   describe('Team Creation', () => {
-    it('Should return a validation error NAME_REQUIRED', async () =>{
+    it('Should return a validation error PROJECT_ID_REQUIRED', async () =>{
       try {
         await DailyScrum.Interfaces.Team.create({});
+      } catch (e) {
+        expect(e.message).to.be.eql(errors.PROJECT_ID_REQUIRED);
+      }
+    });
+    it('Should return a validation error NAME_REQUIRED', async () =>{
+      try {
+        await DailyScrum.Interfaces.Team.create({ projectId: firstTeam._project });
       } catch (e) {
         expect(e.message).to.be.eql(errors.NAME_REQUIRED);
       }
     });
     it('Should create a Team', async () => {
-      const newTeam = await DailyScrum.Interfaces.Team.create(firstTeam);
+      const newTeam = await DailyScrum.Interfaces.Team.create({ name: firstTeam.name, projectId: firstTeam._project });
       expect(newTeam).to.has.property('id');
       firstTeamId = newTeam.id;
       expect(newTeam).to.has.property('name').eql(firstTeam.name);
+      expect(newTeam).to.has.property('_project').eql(firstTeam._project);
     });
     it('Should create another Team', async() => {
-      const newTeam = await DailyScrum.Interfaces.Team.create(secondTeam);
+      const newTeam = await DailyScrum.Interfaces.Team.create({ name: secondTeam.name, projectId: secondTeam._project });
       expect(newTeam).to.has.property('id');
       secondTeamId = newTeam.id;
       expect(newTeam).to.has.property('name').eql(secondTeam.name);
+      expect(newTeam).to.has.property('_project').eql(secondTeam._project);
     });
   });
   describe('Team Read', () => {

@@ -1,18 +1,19 @@
 const logger = require('winston');
-const TeamMemberModel = require('../schemas').TeamMember;
+const { TeamMember: TeamMemberModel } = require('../schemas');
 const errors = require('../utils/errors');
 const roles = require('../utils/roles');
 
 const readTeamMembersByTeamId = async (teamId, opts = { sortBy: 'createdAt' }) => {
   logger.info('Looking for Members from team with id', teamId);
-  const teamMembersFound = await TeamMemberModel.find({ _team: teamId }).sort(opts.sortBy).lean();
+  const teamMembersFound =
+    await TeamMemberModel.find({ _team: teamId }).sort(opts.sortBy).lean({ virtuals: true });
   logger.verbose('TeamMember\'s Found', teamMembersFound);
   return teamMembersFound;
 };
 
 const readById = async (id) => {
   logger.info('Looking for TeamMember with id', id);
-  const teamMemberFound = await TeamMemberModel.findById(id).lean();
+  const teamMemberFound = await TeamMemberModel.findById(id).lean({ virtuals: true });
   logger.verbose('TeamMember Found', teamMemberFound);
   return teamMemberFound;
 };
@@ -23,7 +24,7 @@ const readById = async (id) => {
 const read = async (query = {}) => {
   logger.info('Looking for TeamMember');
   logger.info('query:', query);
-  const teamMembersFound = await TeamMemberModel.find(query).lean();
+  const teamMembersFound = await TeamMemberModel.find(query).lean({ virtuals: true });
   logger.verbose('TeamMembers Found', teamMembersFound);
   return teamMembersFound;
 };
@@ -35,7 +36,8 @@ const create = async ({ role, memberId, teamId }) => {
   if (!teamId) throw new Error(errors.TEAM_ID_REQUIRED);
   const isRoleAllowed = roles.indexOf(role);
   if (isRoleAllowed < 0) throw new Error(errors.ROLE_NOT_ALLOWED);
-  const teamMemberCreated = await TeamMemberModel.create({ role, _member: memberId, _team: teamId });
+  const teamMemberCreated =
+    await TeamMemberModel.create({ role, _member: memberId, _team: teamId });
   logger.info('TeamMember created successfully');
   return teamMemberCreated.toObject();
 };
@@ -49,7 +51,11 @@ const update = async ({ id, role, teamId } = {}) => {
     attrToUpdate.role = role;
   }
   if (teamId) attrToUpdate._team = teamId;
-  const updated = await TeamMemberModel.update({ _id: id }, attrToUpdate, { runValidators: true, overwrite: false });
+  const updated = await TeamMemberModel.update(
+    { _id: id },
+    attrToUpdate,
+    { runValidators: true, overwrite: false }
+  );
   logger.verbose(`Updated: ${updated}`);
   return updated;
 };

@@ -1,5 +1,5 @@
 const logger = require('winston');
-const MemberModel = require('../schemas').Member;
+const { Member: MemberModel } = require('../schemas');
 const roles = require('../utils/roles');
 const errors = require('../utils/errors');
 
@@ -10,7 +10,7 @@ const readRoles = () => roles;
 
 const readById = async (id) => {
   logger.info('Looking for Member with id', id);
-  const memberFound = await MemberModel.findById(id).lean();
+  const memberFound = await MemberModel.findById(id).lean({ virtuals: true });
   logger.verbose('Member Found', memberFound);
   return memberFound;
 };
@@ -21,7 +21,7 @@ const readById = async (id) => {
 const read = async (query = {}) => {
   logger.info('Looking for Member');
   logger.info('query:', query);
-  const membersFound = await MemberModel.find(query).lean();
+  const membersFound = await MemberModel.find(query).lean({ virtuals: true });
   logger.verbose('Members Found', membersFound);
   return membersFound;
 };
@@ -40,7 +40,11 @@ const update = async ({ id, name, birthDate } = {}) => {
   const attrToUpdate = {};
   if (name) attrToUpdate.name = name;
   if (birthDate) attrToUpdate.birthDate = birthDate;
-  const updated = await MemberModel.update({ _id: id }, attrToUpdate, { runValidators: true, overwrite: false });
+  const updated = await MemberModel.update(
+    { _id: id },
+    attrToUpdate,
+    { runValidators: true, overwrite: false }
+  );
   logger.verbose(`Updated: ${updated}`);
   return updated;
 };
