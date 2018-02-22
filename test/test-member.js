@@ -44,6 +44,13 @@ describe('Member Interface', () => {
       expect(newMember).to.has.property('username').eql(firstMember.username);
       expect(newMember).to.not.has.property('birthDate');
     });
+    it('Should return a validation error MEMBER_USERNAME_TAKEN', async () =>{
+      try {
+        await DailyScrum.Interfaces.Member.create({ name: 'Test Name', username: firstMember.username });
+      } catch (e) {
+        expect(e.message).to.be.eql(errors.MEMBER_USERNAME_TAKEN);
+      }
+    });
     it('Should create another Member', async() => {
       const newMember = await DailyScrum.Interfaces.Member.create(secondMember);
       expect(newMember).to.has.property('id');
