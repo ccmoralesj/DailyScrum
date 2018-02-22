@@ -63,7 +63,7 @@ const addToDo = async ({ projectId, toDos }) => {
   logger.info(`Will add some toDos to project with id ${projectId}`);
   logger.info(`ToDo's: ${toDos}`);
   const projectToUpdate = await ProjectModel.findById(projectId);
-  if (!projectToUpdate) throw new Error(errors.TEAM_NOT_FOUND);
+  if (!projectToUpdate) throw new Error(errors.PROJECT_NOT_FOUND);
   logger.info('The project to update was found!');
   toDos.forEach(toDo => projectToUpdate.toDo.push(toDo));
   const projectSaved = await projectToUpdate.save();
@@ -75,7 +75,7 @@ const removeToDo = async ({ projectId, toDos }) => {
   logger.info(`Will remove some toDos to project with id ${projectId}`);
   logger.info(`projects: ${toDos}`);
   const projectToUpdate = await ProjectModel.findById(projectId);
-  if (!projectToUpdate) throw new Error(errors.TEAM_NOT_FOUND);
+  if (!projectToUpdate) throw new Error(errors.PROJECT_NOT_FOUND);
   logger.info('The project to update was found!');
   toDos.forEach((toDo) => {
     const index = projectToUpdate.toDo.indexOf(toDo);
