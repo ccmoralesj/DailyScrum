@@ -5,6 +5,12 @@ const connection = require('../mongooseConnection');
 const { Schema } = mongoose;
 
 const projectSchema = new Schema({
+  _creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'Member',
+    required: true,
+    index: true,
+  },
   name: {
     type: String,
     required: true,

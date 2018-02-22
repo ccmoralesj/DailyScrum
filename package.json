@@ -1,6 +1,6 @@
 {
   "name": "scrumly",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Node module to generate data base interaction for Daily Scrum",
   "main": "index.js",
   "directories": {
@@ -22,8 +22,7 @@
   "keywords": [
     "scrum",
     "daily",
-    "scrum",
-    "daily"
+    "scrum"
   ],
   "author": "Cristian Camilo Morales",
   "license": "ISC",

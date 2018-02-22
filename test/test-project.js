@@ -1,5 +1,6 @@
 const chai = require('chai');
 require('chai-as-promised');
+const mongoose = require('mongoose');
 const roles = require('../utils/roles');
 const errors = require('../utils/errors');
 const DailyScrum = require('../index');
@@ -10,31 +11,49 @@ describe('Project Interface', () => {
   let secondProjectId;
   const firstProject = {
     name: 'Project Test',
+    _creator: new mongoose.Types.ObjectId(),
     description: 'Project to test Scrumly',
   };
   const secondProject = {
     name: 'Test Project',
+    _creator: new mongoose.Types.ObjectId(),
   };
   describe('Project Creation', () => {
-    it('Should return a validation error NAME_REQUIRED', async () =>{
+    it('Should return a validation error CREATOR_ID_REQUIRED', async () =>{
       try {
         await DailyScrum.Interfaces.Project.create({});
+      } catch (e) {
+        expect(e.message).to.be.eql(errors.CREATOR_ID_REQUIRED);
+      }
+    });
+    it('Should return a validation error NAME_REQUIRED', async () =>{
+      try {
+        await DailyScrum.Interfaces.Project.create({ creatorId: firstProject._creator });
       } catch (e) {
         expect(e.message).to.be.eql(errors.NAME_REQUIRED);
       }
     });
     it('Should create a Project', async () => {
-      const newProject = await DailyScrum.Interfaces.Project.create(firstProject);
+      const newProject = await DailyScrum.Interfaces.Project.create({
+        name: firstProject.name,
+        description: firstProject.description,
+        creatorId: firstProject._creator,
+      });
       expect(newProject).to.has.property('id');
       firstProjectId = newProject.id;
       expect(newProject).to.has.property('name').eql(firstProject.name);
       expect(newProject).to.has.property('description').eql(firstProject.description);
+      expect(newProject).to.has.property('_creator').eql(firstProject._creator);
     });
     it('Should create another Project', async() => {
-      const newProject = await DailyScrum.Interfaces.Project.create(secondProject);
+      const newProject = await DailyScrum.Interfaces.Project.create({
+        name: secondProject.name,
+        creatorId: secondProject._creator,
+      });
       expect(newProject).to.has.property('id');
       secondProjectId = newProject.id;
       expect(newProject).to.has.property('name').eql(secondProject.name);
+      expect(newProject).to.has.property('_creator').eql(secondProject._creator);
     });
   });
   describe('Project Read', () => {
@@ -94,6 +113,19 @@ describe('Project Interface', () => {
       expect(projectWithToDoAdded).to.has.property('toDo').eql(testToDo);
       expect(projectWithToDoAdded).to.has.property('name').eql(firstProject.name);
       expect(projectWithToDoAdded).to.has.property('description').eql(firstProject.description);
+    });
+  });
+  describe('Project Utils', () => {
+    describe('isCreator function', () => {
+      it('Should return isCreator = true', async () => {
+        const isCreator = await DailyScrum.Interfaces.Project.isCreator({ projectId: firstProjectId, possibleCreatorId: firstProject._creator });
+        expect(isCreator).to.be.eql(true);
+      });
+      it('Should return isCreator = false', async () => {
+        const fakeId = 'testIdToFail';
+        const isCreator = await DailyScrum.Interfaces.Project.isCreator({ projectId: firstProjectId, possibleCreatorId: fakeId });
+        expect(isCreator).to.be.eql(false);
+      });
     });
   });
   describe('Project Delete', () => {

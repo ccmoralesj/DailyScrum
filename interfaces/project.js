@@ -2,6 +2,14 @@ const logger = require('winston');
 const { Project: ProjectModel } = require('../schemas');
 const errors = require('../utils/errors');
 
+const isCreator = async ({ projectId, possibleCreatorId }) => {
+  logger.info(`Attempting to lookup project creator with project id ${projectId}`);
+  const projectsFound =
+    await ProjectModel.find({ _id: projectId, _creator: possibleCreatorId }).lean();
+  logger.info(`Projects Found ${JSON.stringify(projectsFound)}`);
+  return projectsFound.length > 0;
+};
+
 const readById = async (id) => {
   logger.info('Looking for Project with id', id);
   const projectFound = await ProjectModel.findById(id).lean({ virtuals: true });
@@ -20,10 +28,11 @@ const read = async (query = {}) => {
   return projectsFound;
 };
 
-const create = async ({ name, description }) => {
-  logger.info(`Attempting to create a Project with name: ${name} and description: ${description}`);
+const create = async ({ name, description, creatorId }) => {
+  logger.info(`Attempting to create a Project with name: ${name}, description: ${description} and creator: ${creatorId}`);
+  if (!creatorId) throw new Error(errors.CREATOR_ID_REQUIRED);
   if (!name) throw new Error(errors.NAME_REQUIRED);
-  const projectCreated = await ProjectModel.create({ name, description });
+  const projectCreated = await ProjectModel.create({ name, description, _creator: creatorId });
   logger.info('Project created successfully');
   return projectCreated.toObject();
 };
@@ -79,4 +88,4 @@ const removeToDo = async ({ projectId, toDos }) => {
   return projectSaved;
 };
 
-module.exports = { readById, read, create, update, addToDo, removeToDo, remove };
+module.exports = { readById, read, create, update, addToDo, removeToDo, remove, isCreator };
